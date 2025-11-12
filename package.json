@@ -1,0 +1,13 @@
+{
+  "name": "project-bolt-sb1-uq43uptf-root",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": ["project"],
+  "scripts": {
+    "dev": "cd project && npm run dev",
+    "build": "cd project && npm run build",
+    "lint": "cd project && npm run lint",
+    "preview": "cd project && npm run preview",
+    "typecheck": "cd project && npm run typecheck"
+  }
+}
