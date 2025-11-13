@@ -46,7 +46,7 @@ export const MainMenu = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-            <div className="relative backdrop-blur-xl bg-white/5 border-2 border-white/10 rounded-3xl p-12 shadow-2xl group-hover:border-blue-400/50 transition-all duration-500">
+            <div className="relative glass-highlight group-hover:border-blue-400/50 rounded-3xl p-12 shadow-2xl transition-all duration-500">
               <div className="flex flex-col items-center text-center">
                 <div className="mb-6 relative">
                   <div className="absolute inset-0 bg-blue-400/30 blur-2xl rounded-full" />
@@ -62,7 +62,7 @@ export const MainMenu = () => {
                 <p className="text-gray-400 text-lg">
                   Analyze and detect phishing attempts in email messages
                 </p>
-                <div className="mt-6 px-6 py-3 bg-blue-500/20 border border-blue-400/50 rounded-full text-blue-400 font-semibold group-hover:bg-blue-500/40 transition-all duration-300">
+                <div className="mt-6 px-6 py-3 glass-sm rounded-full text-blue-400 font-semibold hover:bg-blue-500/30 transition-all duration-300 border-blue-400/50">
                   START ANALYSIS
                 </div>
               </div>
@@ -78,7 +78,7 @@ export const MainMenu = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-            <div className="relative backdrop-blur-xl bg-white/5 border-2 border-white/10 rounded-3xl p-12 shadow-2xl group-hover:border-green-400/50 transition-all duration-500">
+            <div className="relative glass-highlight group-hover:border-green-400/50 rounded-3xl p-12 shadow-2xl transition-all duration-500">
               <div className="flex flex-col items-center text-center">
                 <div className="mb-6 relative">
                   <div className="absolute inset-0 bg-green-400/30 blur-2xl rounded-full" />
@@ -94,7 +94,7 @@ export const MainMenu = () => {
                 <p className="text-gray-400 text-lg">
                   Detect network intrusions and analyze packet captures
                 </p>
-                <div className="mt-6 px-6 py-3 bg-green-500/20 border border-green-400/50 rounded-full text-green-400 font-semibold group-hover:bg-green-500/40 transition-all duration-300">
+                <div className="mt-6 px-6 py-3 glass-sm rounded-full text-green-400 font-semibold hover:bg-green-500/30 transition-all duration-300 border-green-400/50">
                   START ANALYSIS
                 </div>
               </div>

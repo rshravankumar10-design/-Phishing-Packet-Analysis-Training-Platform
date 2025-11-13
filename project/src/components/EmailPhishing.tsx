@@ -69,7 +69,7 @@ export const EmailPhishing = () => {
           <p className="text-gray-400 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>Paste an email and analyze it for phishing indicators</p>
         </div>
 
-        <div className="backdrop-blur-xl bg-white/5 border-2 border-blue-400/30 rounded-lg p-8 mb-8 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+        <div className="glass-highlight rounded-lg p-8 mb-8 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
           <label className="block text-sm font-semibold text-gray-300 mb-4">Email Content</label>
           <textarea
             value={emailContent}
@@ -88,12 +88,12 @@ export const EmailPhishing = () => {
 
         {result && (
           <div className="space-y-4 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-            <div className={`backdrop-blur-xl border-2 rounded-lg p-8 ${
+            <div className={`glass rounded-lg p-8 border-2 ${
               result.verdict === 'SAFE'
-                ? 'bg-green-900/20 border-green-400/50'
+                ? 'glass-success border-green-400/50'
                 : result.verdict === 'SUSPICIOUS'
-                  ? 'bg-yellow-900/20 border-yellow-400/50'
-                  : 'bg-red-900/20 border-red-400/50'
+                  ? 'glass-warning border-yellow-400/50'
+                  : 'glass-danger border-red-400/50'
             }`}>
               <div className="flex items-center gap-4 mb-4">
                 {result.verdict === 'SAFE' ? (
