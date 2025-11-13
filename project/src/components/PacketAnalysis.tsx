@@ -73,7 +73,7 @@ export const PacketAnalysis = () => {
       <div className="p-8 max-w-4xl mx-auto">
         <div className="text-center mb-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
           <div className="flex items-center justify-center gap-3 mb-4 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-            <Network className="w-8 h-8 text-green-400 animate-spin-in animate-pulse-glow" style={{ animationDelay: '0.1s' }} />
+            <Network className="w-8 h-8 text-green-400 animate-spin-in-no-bounce" style={{ animationDelay: '0.1s' }} />
             <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
               PACKET ANALYSIS ENGINE
             </h1>
