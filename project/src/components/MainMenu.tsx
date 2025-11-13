@@ -1,11 +1,9 @@
 import { Mail, Network } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-interface MainMenuProps {
-  onSelectAnalysis: (type: 'email' | 'packet') => void;
-}
-
-export const MainMenu = ({ onSelectAnalysis }: MainMenuProps) => {
+export const MainMenu = () => {
+  const navigate = useNavigate();
   const [hoveredCard, setHoveredCard] = useState<'email' | 'packet' | null>(null);
 
   return (
@@ -43,7 +41,7 @@ export const MainMenu = ({ onSelectAnalysis }: MainMenuProps) => {
             className="group relative cursor-pointer transform transition-all duration-500 hover:scale-105"
             onMouseEnter={() => setHoveredCard('email')}
             onMouseLeave={() => setHoveredCard(null)}
-            onClick={() => onSelectAnalysis('email')}
+            onClick={() => navigate('/email-phishing')}
           >
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -74,7 +72,7 @@ export const MainMenu = ({ onSelectAnalysis }: MainMenuProps) => {
             className="group relative cursor-pointer transform transition-all duration-500 hover:scale-105"
             onMouseEnter={() => setHoveredCard('packet')}
             onMouseLeave={() => setHoveredCard(null)}
-            onClick={() => onSelectAnalysis('packet')}
+            onClick={() => navigate('/packet-analysis')}
           >
             <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
