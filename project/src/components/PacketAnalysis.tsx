@@ -64,24 +64,24 @@ export const PacketAnalysis = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
       <button
         onClick={() => navigate('/')}
-        className="m-6 flex items-center gap-2 text-green-400 hover:text-green-300 transition"
+        className="m-6 flex items-center gap-2 text-green-400 hover:text-green-300 transition animate-fade-in"
       >
         <ArrowLeft className="w-5 h-5" />
         Back to Menu
       </button>
 
       <div className="p-8 max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Network className="w-8 h-8 text-green-400" />
-            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+        <div className="text-center mb-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+          <div className="flex items-center justify-center gap-3 mb-4 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+            <Network className="w-8 h-8 text-green-400 animate-spin-in animate-pulse-glow" style={{ animationDelay: '0.1s' }} />
+            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
               PACKET ANALYSIS ENGINE
             </h1>
           </div>
-          <p className="text-gray-400">Analyze network traffic for intrusion detection</p>
+          <p className="text-gray-400 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>Analyze network traffic for intrusion detection</p>
         </div>
 
-        <div className="backdrop-blur-xl bg-white/5 border-2 border-green-400/30 rounded-lg p-8 mb-8">
+        <div className="backdrop-blur-xl bg-white/5 border-2 border-green-400/30 rounded-lg p-8 mb-8 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
           <label className="block text-sm font-semibold text-gray-300 mb-4">PCAP Data / Packet Dump</label>
           <textarea
             value={pcapData}
@@ -99,7 +99,7 @@ export const PacketAnalysis = () => {
         </div>
 
         {result && (
-          <div className="space-y-4">
+          <div className="space-y-4 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
             <div className={`backdrop-blur-xl border-2 rounded-lg p-8 ${
               result.verdict === 'NORMAL'
                 ? 'bg-green-900/20 border-green-400/50'

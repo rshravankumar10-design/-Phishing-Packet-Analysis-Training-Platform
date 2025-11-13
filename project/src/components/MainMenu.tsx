@@ -30,7 +30,7 @@ export const MainMenu = () => {
           <h1 className="text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 mb-4 cinematic-font animate-gradient">
             PHISHING & PACKET ANALYSIS
           </h1>
-          <p className="text-xl md:text-2xl text-green-400 font-light tracking-widest">
+          <p className="text-xl md:text-2xl text-green-400 font-light tracking-widest animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
             Training Platform
           </p>
           <div className="mt-4 h-1 w-64 mx-auto bg-gradient-to-r from-transparent via-green-400 to-transparent animate-pulse" />
@@ -38,7 +38,8 @@ export const MainMenu = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl w-full">
           <div
-            className="group relative cursor-pointer transform transition-all duration-500 hover:scale-105"
+            className="group relative cursor-pointer transform transition-all duration-500 hover:scale-105 animate-fade-in-up"
+            style={{ animationDelay: '0.4s' }}
             onMouseEnter={() => setHoveredCard('email')}
             onMouseLeave={() => setHoveredCard(null)}
             onClick={() => navigate('/email-phishing')}
@@ -69,7 +70,8 @@ export const MainMenu = () => {
           </div>
 
           <div
-            className="group relative cursor-pointer transform transition-all duration-500 hover:scale-105"
+            className="group relative cursor-pointer transform transition-all duration-500 hover:scale-105 animate-fade-in-up"
+            style={{ animationDelay: '0.5s' }}
             onMouseEnter={() => setHoveredCard('packet')}
             onMouseLeave={() => setHoveredCard(null)}
             onClick={() => navigate('/packet-analysis')}
@@ -100,7 +102,7 @@ export const MainMenu = () => {
           </div>
         </div>
 
-        <div className="mt-12 text-center text-gray-500 text-sm">
+        <div className="mt-12 text-center text-gray-500 text-sm animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
           <p>Select an analysis mode to begin training</p>
         </div>
       </div>
