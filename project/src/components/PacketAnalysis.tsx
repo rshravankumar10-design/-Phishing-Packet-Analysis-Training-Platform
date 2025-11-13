@@ -9,23 +9,69 @@ interface PacketAnalysisResult {
   trafficPattern: string;
 }
 
+interface WiresharkPacket {
+  number: number;
+  timestamp: string;
+  source: string;
+  destination: string;
+  protocol: string;
+  length: number;
+  info: string;
+  threat: 'SAFE' | 'WARNING' | 'CRITICAL';
+}
+
 export const PacketAnalysis = () => {
   const navigate = useNavigate();
   const [pcapData, setPcapData] = useState('');
   const [result, setResult] = useState<PacketAnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [wiresharkPackets, setWiresharkPackets] = useState<WiresharkPacket[]>([]);
+
+  const parseWiresharkPackets = (data: string): WiresharkPacket[] => {
+    // Simulate Wireshark packet extraction
+    const packets: WiresharkPacket[] = [];
+    const lines = data.split('\n').filter(line => line.trim());
+    
+    lines.forEach((line, index) => {
+      // Detect IP addresses and connections
+      const ipRegex = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/g;
+      const ips = line.match(ipRegex) || [];
+      
+      if (ips.length >= 2) {
+        const isCritical = /malware|trojan|backdoor|exploit/i.test(line);
+        const isSuspicious = /syn|udp|dns|http|tcp/i.test(line);
+        
+        packets.push({
+          number: index + 1,
+          timestamp: `00:00:${String(index).padStart(2, '0')}`,
+          source: ips[0] || '192.168.1.100',
+          destination: ips[1] || '8.8.8.8',
+          protocol: isCritical ? 'MALWARE' : isSuspicious ? 'TCP/UDP' : 'HTTP',
+          length: Math.floor(Math.random() * 1500) + 64,
+          info: line.substring(0, 50),
+          threat: isCritical ? 'CRITICAL' : isSuspicious ? 'WARNING' : 'SAFE'
+        });
+      }
+    });
+    
+    return packets.slice(0, 10); // Return first 10 packets
+  };
 
   const analyzePackets = () => {
     setIsAnalyzing(true);
     setTimeout(() => {
+      // Parse Wireshark packets
+      const packets = parseWiresharkPackets(pcapData);
+      setWiresharkPackets(packets);
+
       const intrusionPatterns = [
-        { pattern: /syn flood|dos|ddos/i, weight: 40, label: 'DoS/DDoS Attack Signature' },
-        { pattern: /port scan|nmap|masscan/i, weight: 35, label: 'Port Scanning Activity' },
-        { pattern: /malware|trojan|backdoor/i, weight: 50, label: 'Malware Signature Detected' },
-        { pattern: /sql injection|xss|rce/i, weight: 45, label: 'Web Exploit Detected' },
-        { pattern: /brute force|password attack|failed.*auth/i, weight: 30, label: 'Brute Force Attempt' },
-        { pattern: /dns exfiltration|dns tunneling/i, weight: 40, label: 'DNS Tunneling Detected' },
-        { pattern: /unusual.*traffic|anomaly|suspicious.*protocol/i, weight: 25, label: 'Anomalous Traffic Pattern' },
+        { pattern: /syn flood|dos|ddos|direct.*connection/i, weight: 40, label: 'DoS/DDoS Attack Signature' },
+        { pattern: /port scan|nmap|masscan|direct.*port/i, weight: 35, label: 'Port Scanning Activity' },
+        { pattern: /malware|trojan|backdoor|direct.*access/i, weight: 50, label: 'Malware Signature Detected' },
+        { pattern: /sql injection|xss|rce|direct.*exec/i, weight: 45, label: 'Web Exploit Detected' },
+        { pattern: /brute force|password attack|failed.*auth|direct.*auth/i, weight: 30, label: 'Brute Force Attempt' },
+        { pattern: /dns exfiltration|dns tunneling|direct.*dns/i, weight: 40, label: 'DNS Tunneling Detected' },
+        { pattern: /unusual.*traffic|anomaly|suspicious.*protocol|direct.*communication/i, weight: 25, label: 'Anomalous Traffic Pattern' },
       ];
 
       let score = 0;
@@ -38,6 +84,13 @@ export const PacketAnalysis = () => {
           detections.push(label);
         }
       });
+
+      // Check for direct connections in packets
+      const directConnectionCount = packets.filter(p => p.threat !== 'SAFE').length;
+      if (directConnectionCount > 0) {
+        score += directConnectionCount * 15;
+        detections.push(`${directConnectionCount} Direct Connection(s) Detected`);
+      }
 
       let verdict: 'NORMAL' | 'SUSPICIOUS' | 'INTRUSION' = 'NORMAL';
       if (score >= 70) {
@@ -144,6 +197,56 @@ export const PacketAnalysis = () => {
                 </div>
               )}
             </div>
+
+            {wiresharkPackets.length > 0 && (
+              <div className="glass rounded-lg p-6 border-2 border-green-400/30 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+                <div className="flex items-center gap-2 mb-4">
+                  <Network className="w-5 h-5 text-green-400" />
+                  <h3 className="text-lg font-semibold text-green-400">Wireshark Packet Capture</h3>
+                </div>
+                
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs text-gray-300 font-mono">
+                    <thead className="border-b border-green-400/30">
+                      <tr>
+                        <th className="text-left py-2 px-2 text-green-400">#</th>
+                        <th className="text-left py-2 px-2 text-green-400">Time</th>
+                        <th className="text-left py-2 px-2 text-green-400">Source</th>
+                        <th className="text-left py-2 px-2 text-green-400">Destination</th>
+                        <th className="text-left py-2 px-2 text-green-400">Protocol</th>
+                        <th className="text-left py-2 px-2 text-green-400">Length</th>
+                        <th className="text-left py-2 px-2 text-green-400">Threat</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {wiresharkPackets.map((packet) => (
+                        <tr key={packet.number} className={`border-b border-gray-700/30 hover:bg-green-400/5 transition ${
+                          packet.threat === 'CRITICAL' ? 'bg-red-900/10' : 
+                          packet.threat === 'WARNING' ? 'bg-yellow-900/10' : 
+                          'bg-transparent'
+                        }`}>
+                          <td className="py-2 px-2 text-gray-400">{packet.number}</td>
+                          <td className="py-2 px-2 text-gray-400">{packet.timestamp}</td>
+                          <td className="py-2 px-2 text-blue-300">{packet.source}</td>
+                          <td className="py-2 px-2 text-blue-300">{packet.destination}</td>
+                          <td className="py-2 px-2 text-green-400">{packet.protocol}</td>
+                          <td className="py-2 px-2 text-gray-400">{packet.length}</td>
+                          <td className="py-2 px-2">
+                            <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                              packet.threat === 'CRITICAL' ? 'bg-red-600 text-white' :
+                              packet.threat === 'WARNING' ? 'bg-yellow-600 text-white' :
+                              'bg-green-600 text-white'
+                            }`}>
+                              {packet.threat}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
