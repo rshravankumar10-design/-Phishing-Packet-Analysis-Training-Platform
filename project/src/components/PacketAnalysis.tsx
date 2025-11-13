@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { ArrowLeft, AlertTriangle, CheckCircle, Network, Flag, Activity } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { ArrowLeft, AlertTriangle, CheckCircle, Network, Flag, Activity, Link } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface PacketAnalysisResult {
   score: number;
@@ -22,10 +22,29 @@ interface WiresharkPacket {
 
 export const PacketAnalysis = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [pcapData, setPcapData] = useState('');
   const [result, setResult] = useState<PacketAnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [wiresharkPackets, setWiresharkPackets] = useState<WiresharkPacket[]>([]);
+  const [shareLink, setShareLink] = useState('');
+
+  // Auto-analyze if packet data is provided in URL
+  useEffect(() => {
+    const packetParam = searchParams.get('packets');
+    const dataParam = searchParams.get('data');
+    
+    if (packetParam) {
+      const decodedData = decodeURIComponent(packetParam);
+      setPcapData(decodedData);
+      // Trigger analysis automatically
+      analyzePacketsDirectly(decodedData);
+    } else if (dataParam) {
+      const decodedData = decodeURIComponent(dataParam);
+      setPcapData(decodedData);
+      analyzePacketsDirectly(decodedData);
+    }
+  }, [searchParams]);
 
   const parseWiresharkPackets = (data: string): WiresharkPacket[] => {
     // Simulate Wireshark packet extraction
@@ -71,11 +90,11 @@ export const PacketAnalysis = () => {
     return packets;
   };
 
-  const analyzePackets = () => {
+  const performAnalysis = (data: string) => {
     setIsAnalyzing(true);
     setTimeout(() => {
       // Parse Wireshark packets
-      const packets = parseWiresharkPackets(pcapData);
+      const packets = parseWiresharkPackets(data);
       setWiresharkPackets(packets);
 
       const intrusionPatterns = [
@@ -93,7 +112,7 @@ export const PacketAnalysis = () => {
       let trafficPattern = 'NORMAL';
 
       intrusionPatterns.forEach(({ pattern, weight, label }) => {
-        if (pattern.test(pcapData)) {
+        if (pattern.test(data)) {
           score += weight;
           detections.push(label);
         }
@@ -127,6 +146,23 @@ export const PacketAnalysis = () => {
     }, 1200);
   };
 
+  const analyzePacketsDirectly = (data: string) => {
+    setPcapData(data);
+    performAnalysis(data);
+  };
+
+  const analyzePackets = () => {
+    performAnalysis(pcapData);
+  };
+
+  const generateShareLink = () => {
+    const encoded = encodeURIComponent(pcapData);
+    const link = `${window.location.origin}/packet-analysis?packets=${encoded}`;
+    setShareLink(link);
+    // Copy to clipboard
+    navigator.clipboard.writeText(link);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
       <button
@@ -156,13 +192,30 @@ export const PacketAnalysis = () => {
             placeholder="Paste tcpdump output, Wireshark data, or packet hex dump here..."
             className="w-full h-48 bg-gray-800/50 border border-green-400/20 rounded-lg p-4 text-white placeholder-gray-500 focus:outline-none focus:border-green-400 resize-none font-mono text-sm"
           />
-          <button
-            onClick={analyzePackets}
-            disabled={!pcapData.trim() || isAnalyzing}
-            className="mt-6 w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-600 text-white font-bold py-3 rounded-lg transition"
-          >
-            {isAnalyzing ? 'Scanning Network...' : 'Analyze Packets'}
-          </button>
+          <div className="mt-6 flex gap-3">
+            <button
+              onClick={analyzePackets}
+              disabled={!pcapData.trim() || isAnalyzing}
+              className="flex-1 bg-green-500 hover:bg-green-600 disabled:bg-gray-600 text-white font-bold py-3 rounded-lg transition"
+            >
+              {isAnalyzing ? 'Scanning Network...' : 'Analyze Packets'}
+            </button>
+            <button
+              onClick={generateShareLink}
+              disabled={!pcapData.trim() || !result}
+              className="flex items-center gap-2 px-6 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-600 text-white font-bold py-3 rounded-lg transition"
+              title="Copy shareable analysis link"
+            >
+              <Link className="w-4 h-4" />
+              Share
+            </button>
+          </div>
+          {shareLink && (
+            <div className="mt-3 p-3 bg-green-900/20 border border-green-400/30 rounded-lg">
+              <p className="text-xs text-gray-400 mb-1">Link copied to clipboard:</p>
+              <p className="text-xs text-green-400 break-all font-mono">{shareLink}</p>
+            </div>
+          )}
         </div>
 
         {result && (
