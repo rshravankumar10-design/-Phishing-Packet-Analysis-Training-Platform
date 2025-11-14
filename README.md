@@ -129,7 +129,6 @@ Licensed under the MIT License — see LICENSE
 
 📞 Contact
 
-👤 Maintainer: Your Name
-📧 Email: youremail@example.com
-🌐 GitHub: github.com/your-username
+👤 Maintainer: rayenchu shravan kumar
+🌐 GitHub: github.com/
 
